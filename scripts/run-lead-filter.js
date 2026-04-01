@@ -103,6 +103,7 @@ function disqualifyCategory(record, title, company, industry, about) {
   const c = lower(company);
   const i = lower(industry);
   const a = lower(about);
+  const activeCategories = new Set((settings.qualification.disqualifyCategories || []).map((v) => lower(v)));
   const roleExcludes = (settings.targetMarket.alwaysExcludeRoles || []).map((v) => lower(v));
   const companyExcludes = (settings.targetMarket.alwaysExcludeCompanyTypes || []).map((v) => lower(v));
   const competitorCompanyKw = (competitorProfile ? competitorProfile.companyKeywords || [] : []).map((v) => lower(v));
@@ -110,26 +111,28 @@ function disqualifyCategory(record, title, company, industry, about) {
   const competitorServiceKw = (competitorProfile ? competitorProfile.serviceKeywords || [] : []).map((v) => lower(v));
   const allCompetitorCompanyKw = [...new Set([...companyExcludes, ...competitorCompanyKw])];
 
-  if (
+  if (activeCategories.has("non_decision_makers") && (
     /student|intern|assistant|junior/.test(t) ||
     roleExcludes.some((r) => r && t.includes(r))
-  ) {
+  )) {
     return "non_decision_makers";
   }
 
-  if (
+  if (activeCategories.has("competitors") && (
     allCompetitorCompanyKw.some((k) => k && c.includes(k)) ||
     competitorIndustryKw.some((k) => k && i.includes(k)) ||
     competitorServiceKw.some((k) => k && a.includes(k))
-  ) {
+  )) {
     return "competitors";
   }
 
-  if (/consumer|retail|b2c/.test(i) && !/b2b|software|saas|services/.test(i)) {
+  if (activeCategories.has("b2c_focused") &&
+    /consumer|retail|b2c/.test(i) && !/b2b|software|saas|services/.test(i)) {
     return "b2c_focused";
   }
 
-  if (/engineer|developer|support|it admin|back office/.test(t) && !/head|director|vp|chief/.test(t)) {
+  if (activeCategories.has("no_outbound_intent") &&
+    /engineer|developer|support|it admin|back office/.test(t) && !/head|director|vp|chief/.test(t)) {
     return "no_outbound_intent";
   }
 

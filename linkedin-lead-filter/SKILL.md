@@ -77,7 +77,8 @@ C) I don't have a CSV — show me how signals work
 **If user picks A or provides a file directly:**
 Read the file they provide. If pasted inline, parse it as CSV.
 
-Acknowledge the leads briefly, then show the signal showcase before proceeding:
+Acknowledge the leads briefly, then show the signal showcase before proceeding.
+(Only show the btw block for option A — skip it for option C.)
 
 ```
 Got it — [N] leads loaded from [filename or "your CSV"].
@@ -136,8 +137,20 @@ Say:
 Then stop. Do not proceed until they have a file.
 
 **If user picks C:**
-Read `sample_warm_leads.example.csv` from the repo root and proceed with that as the input. Tell the user:
+Read `sample_warm_leads.example.csv` from the repo root. Tell the user:
 > Loading sample warm leads — placeholder contacts with realistic signals so you can run the full pipeline right now. Swap in your real leads any time.
+
+Do **not** show the btw/signals table.
+
+Display the sample leads as a readable table (Name, Title, Company, Signal columns). Then ask:
+
+```
+Here are your sample leads. Want to change anything before I run the filter?
+(edit a row, swap someone out, add a lead — or just say "looks good")
+```
+
+If they request changes, apply them, re-display the updated table, and ask again.
+Once they confirm ("looks good" or equivalent), proceed with the (possibly edited) leads as the input.
 
 Identify the columns available. At minimum, look for: Name, Title, Company, LinkedIn URL, and any signal or engagement data.
 

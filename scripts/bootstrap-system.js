@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const fs = require("fs");
 const path = require("path");
+const readline = require("readline");
 const { readJson, writeJson, ensureDir } = require("./lib/io");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -62,9 +63,60 @@ if (!fs.existsSync(brandVoicePath)) {
   );
 }
 
-console.log(JSON.stringify({
+const result = {
   ok: true,
   settingsInitialized: !currentSettings,
   stateInitialized: !currentState,
   root: ROOT
-}, null, 2));
+};
+
+// Telemetry opt-in — ask once on first setup
+const freshState = readJson(statePath, {});
+if (!freshState.telemetryPrompted) {
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+
+  const ask = (q) => new Promise((resolve) => rl.question(q, resolve));
+
+  (async () => {
+    console.log("\n──────────────────────────────────────────");
+    console.log("Help us improve these skills for your industry.");
+    console.log("Community mode shares anonymous usage data — which skills you run,");
+    console.log("how many leads processed, signal types that worked.");
+    console.log("No names, no message content, no file paths. Ever.");
+    console.log("Change anytime: set \"telemetry\": \"off\" in state/linkedin-settings.json");
+    console.log("──────────────────────────────────────────");
+
+    const a1 = await ask("\nA) Sure, happy to help improve this\nB) No thanks\n> ");
+
+    let telemetryLevel;
+
+    if (a1.trim().toUpperCase() === "A") {
+      telemetryLevel = "community";
+    } else {
+      const a2 = await ask(
+        "\nHow about anonymous mode? We just learn that someone ran the pipeline —\n" +
+        "no ID, no details. Just a counter that helps us know the tool is useful.\n\n" +
+        "A) Anonymous is fine\nB) No thanks, fully off\n> "
+      );
+      telemetryLevel = a2.trim().toUpperCase() === "A" ? "anonymous" : "off";
+    }
+
+    rl.close();
+
+    // Save telemetry choice to settings
+    const settings = readJson(settingsPath, {});
+    if (!settings.settings) settings.settings = {};
+    settings.settings.telemetry = telemetryLevel;
+    writeJson(settingsPath, settings);
+
+    // Mark telemetry as prompted in state
+    const state = readJson(statePath, {});
+    state.telemetryPrompted = true;
+    writeJson(statePath, state);
+
+    result.telemetry = telemetryLevel;
+    console.log("\n" + JSON.stringify(result, null, 2));
+  })();
+} else {
+  console.log(JSON.stringify(result, null, 2));
+}

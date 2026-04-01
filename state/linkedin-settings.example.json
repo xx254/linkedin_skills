@@ -1,12 +1,6 @@
 {
   "version": "1.0.0",
   "firstRunCompleted": false,
-  "timezone": "America/Los_Angeles",
-  "cadence": {
-    "frequency": "daily",
-    "dayOfWeek": "monday",
-    "time": "08:00"
-  },
   "targetMarket": {
     "industries": [],
     "companySizes": [],

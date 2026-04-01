@@ -133,39 +133,28 @@ If C: ask for each ICP field individually, then ask for competitor description a
 
 ## Step 4: Collect conversion goal
 
-Ask:
-```
-What's the goal of your outreach — what action do you want an interested prospect to take?
+The user already provided a landing page URL in Step 1. Use it as the default. Ask:
 
-A) Visit a landing page
-B) Book a call
-C) Fill out a form
-D) Receive a lead magnet (e.g. guide, case study)
-E) Subscribe to a newsletter
+```
+What do you want an interested prospect to do?
+
+A) Visit your landing page — [URL from Step 1]
+B) Book a call — paste a Calendly or booking link
+C) Fill out a form — paste the form URL
+D) Receive a lead magnet — paste the link
+E) Subscribe to a newsletter — paste the link
 F) Other — describe it
 
-If you have a link for it, paste it now. You can also skip this and add it later.
 ```
 
-Save the choice as `outreach.conversionGoal.type` and the link (if provided) as `outreach.conversionGoal.link`. If no link is given, leave `link` as `null`. Do not block progress if the link is missing.
+Wait for the user to reply before continuing. Do not assume A.
+
+If user confirms A: set `outreach.conversionGoal.type` to `landing_page` and `outreach.conversionGoal.link` to the URL from Step 1.
+Otherwise: save their choice as type and their link as the URL. If no link given, leave `link` as `null`. Do not block progress.
 
 ---
 
-## Step 5: Collect timezone and cadence
-
-Ask:
-```
-Two quick preferences:
-
-1. Your timezone? (e.g. America/New_York, Europe/London, Asia/Singapore)
-2. How often do you want to run outreach?
-   A) Daily — pick a time (e.g. 08:00)
-   B) Weekly — pick a day + time (e.g. Monday 08:00)
-```
-
----
-
-## Step 6: Save settings
+## Step 5: Save settings
 
 Write the confirmed ICP + preferences into `state/linkedin-settings.json`:
 
@@ -175,8 +164,6 @@ Write the confirmed ICP + preferences into `state/linkedin-settings.json`:
 - `targetMarket.geographies`
 - `targetMarket.alwaysExcludeRoles`
 - `qualification.disqualifyCategories` — array of snake_case labels derived in Step 2 (e.g. `["competitors", "non_decision_makers", "b2c_focused"]`)
-- `timezone`
-- `cadence`
 - `outreach.conversionGoal.type`
 - `outreach.conversionGoal.link` (may be `null`)
 - `firstRunCompleted` → `true`
@@ -197,55 +184,7 @@ Also write the competitor profile to `state/competitor-profile.json`:
 
 ---
 
-## Step 6.5: Telemetry opt-in (one time only)
-
-Check if `state/linkedin-system-state.json` has `"telemetryPrompted": true`. If yes, skip this step entirely.
-
-Ask once using AskUserQuestion:
-
-> Help us build better signals for your industry! Community mode shares anonymous usage data (which skills you use, how many leads processed, signal types that worked) — no names, no message content, no file paths ever sent.
-> Change anytime by setting `"telemetry": "off"` in `state/linkedin-settings.json`.
-
-Options:
-- A) Sure, happy to help improve this
-- B) No thanks
-
-If A: set `settings.telemetry = "community"` in `state/linkedin-settings.json`
-If B: ask one follow-up:
-
-> How about anonymous mode? We just learn that *someone* ran the pipeline — no ID, no details. Just a counter that helps us know the tool is useful.
-
-Options:
-- A) Anonymous is fine
-- B) No thanks, fully off
-
-If B→A: set `settings.telemetry = "anonymous"`
-If B→B: set `settings.telemetry = "off"`
-
-Always set `state.telemetryPrompted = true` in `state/linkedin-system-state.json` after this step regardless of choice.
-
-**What gets sent (community mode only):**
-- Which skill was run
-- Number of leads processed
-- Signal types present (e.g. `post_like`, `funding_news`) — no names or content
-- Outcome (done / blocked / needs_context)
-- Timestamp
-
-**What is never sent:** names, companies, LinkedIn URLs, message content, file paths, your landing page URL.
-
-**How it's sent:** at the end of each skill run via:
-```bash
-curl -s -X POST https://linkednav-telemetry.vercel.app/api/telemetry \
-  -H "Content-Type: application/json" \
-  -d '{"skill":"<skill_name>","leads":<count>,"signals":[<types>],"outcome":"<outcome>","ts":"<iso>"}' \
-  2>/dev/null &
-```
-
-Only run this curl if `settings.telemetry` is `"community"`. If `"anonymous"`, send `{"skill":"<skill_name>","ts":"<iso>"}` only. If `"off"`, skip entirely.
-
----
-
-## Step 7: Confirm and hand off
+## Step 6: Confirm and hand off
 
 Output:
 
@@ -257,8 +196,6 @@ Industries:   [list]
 Seniority:    [list]
 Company size: [list]
 Geographies:  [list]
-Timezone:     [tz]
-Cadence:      [frequency + time]
 Goal:         [conversionGoal.type] — [conversionGoal.link or "no link set"]
 
 Settings saved to: state/linkedin-settings.json
