@@ -1,0 +1,20 @@
+# Generated per run (keep dirs via .gitkeep)
+output/*
+!output/.gitkeep
+reports/*
+!reports/.gitkeep
+
+# Personal state and run data — commit only the .example.json templates
+state/*.json
+!state/*.example.json
+
+# Lead CSV files — contain real personal data, never commit
+*.csv
+!sample_contacts.example.csv
+!sample_warm_leads.example.csv
+
+# Claude Code local settings (contain user-specific paths)
+.claude/
+
+# OS / editor
+.DS_Store

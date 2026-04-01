@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LinkedIn Skills Settings",
+  "type": "object",
+  "required": [
+    "version",
+    "timezone",
+    "cadence",
+    "targetMarket",
+    "qualification",
+    "outreach",
+    "prioritization"
+  ],
+  "properties": {
+    "version": { "type": "string" },
+    "firstRunCompleted": { "type": "boolean" },
+    "timezone": { "type": "string" },
+    "cadence": {
+      "type": "object",
+      "required": ["frequency", "time"],
+      "properties": {
+        "frequency": { "type": "string", "enum": ["daily", "weekly"] },
+        "dayOfWeek": { "type": "string" },
+        "time": { "type": "string" }
+      }
+    },
+    "targetMarket": {
+      "type": "object",
+      "properties": {
+        "industries": { "type": "array", "items": { "type": "string" } },
+        "companySizes": { "type": "array", "items": { "type": "string" } },
+        "geographies": { "type": "array", "items": { "type": "string" } },
+        "seniority": { "type": "array", "items": { "type": "string" } },
+        "alwaysExcludeRoles": { "type": "array", "items": { "type": "string" } },
+        "alwaysExcludeCompanyTypes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "qualification": {
+      "type": "object",
+      "required": ["minScoreToPrioritize", "allowTitleUnclearAsScore1", "disqualifyCategories"],
+      "properties": {
+        "minScoreToPrioritize": { "type": "number", "minimum": 1, "maximum": 3 },
+        "allowTitleUnclearAsScore1": { "type": "boolean" },
+        "disqualifyCategories": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "outreach": {
+      "type": "object",
+      "required": ["maxChars", "maxQuestions", "firstMessageNoPitch"],
+      "properties": {
+        "maxChars": { "type": "number", "minimum": 120, "maximum": 500 },
+        "maxQuestions": { "type": "number", "minimum": 0, "maximum": 2 },
+        "firstMessageNoPitch": { "type": "boolean" },
+        "toneProfilePath": { "type": "string" }
+      }
+    },
+    "prioritization": {
+      "type": "object",
+      "properties": {
+        "weights": {
+          "type": "object",
+          "properties": {
+            "icpFit": { "type": "number" },
+            "signalStrength": { "type": "number" },
+            "timing": { "type": "number" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "version": "1.0.0",
+  "firstRunCompleted": false,
+  "lastSuccessfulRunAt": null,
+  "lastLeadFilterRunAt": null,
+  "lastDraftRunAt": null,
+  "lastReplyRunAt": null,
+  "leadRegistry": {},
+  "outreachRegistry": {},
+  "weeklyMetrics": {
+    "weekKey": null,
+    "leads_processed": 0,
+    "qualified_count": 0,
+    "drafted_count": 0,
+    "reply_drafts_count": 0,
+    "replied_count": 0,
+    "rejected_count": 0,
+    "score3_conversion_count": 0
+  }
+}

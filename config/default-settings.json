@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "firstRunCompleted": false,
+  "timezone": "America/Los_Angeles",
+  "cadence": {
+    "frequency": "daily",
+    "dayOfWeek": "monday",
+    "time": "08:00"
+  },
+  "targetMarket": {
+    "industries": [],
+    "companySizes": [],
+    "geographies": [],
+    "seniority": [],
+    "alwaysExcludeRoles": [],
+    "alwaysExcludeCompanyTypes": []
+  },
+  "qualification": {
+    "minScoreToPrioritize": 3,
+    "allowTitleUnclearAsScore1": true,
+    "disqualifyCategories": []
+  },
+  "outreach": {
+    "maxChars": 300,
+    "maxQuestions": 1,
+    "firstMessageNoPitch": true,
+    "toneProfilePath": "context/brand-voice.md"
+  },
+  "prioritization": {
+    "weights": {
+      "icpFit": 0.5,
+      "signalStrength": 0.3,
+      "timing": 0.2
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "linkedin-skills-system",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "bootstrap": "node bootstrap-system.js",
+    "lead-filter": "node run-lead-filter.js ../sample_contacts.csv",
+    "draft": "node run-draft-outreach.js",
+    "reply": "node run-reply-handler.js",
+    "outcome": "node record-outcome.js",
+    "weekly-report": "node generate-weekly-report.js"
+  }
+}

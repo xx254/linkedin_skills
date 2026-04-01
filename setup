@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+# linkedin-skills setup — register skills with Claude Code and initialize state
+set -e
+
+REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# ─── Detect Claude skills directory ───────────────────────────────────────────
+# If this repo is already inside ~/.claude/skills/, link siblings there.
+# Otherwise default to ~/.claude/skills/.
+INSTALL_SKILLS_DIR="$(dirname "$REPO_DIR")"
+PARENT_BASENAME="$(basename "$(dirname "$INSTALL_SKILLS_DIR")")"
+SKILLS_BASENAME="$(basename "$INSTALL_SKILLS_DIR")"
+
+if [ "$SKILLS_BASENAME" = "skills" ] && [ "$PARENT_BASENAME" = ".claude" ]; then
+  : # already inside ~/.claude/skills/ — good
+else
+  INSTALL_SKILLS_DIR="$HOME/.claude/skills"
+  mkdir -p "$INSTALL_SKILLS_DIR"
+fi
+
+# ─── Check Node.js (optional) ─────────────────────────────────────────────────
+HAS_NODE=false
+if command -v node >/dev/null 2>&1; then
+  NODE_MAJOR=$(node -e "process.stdout.write(String(process.versions.node.split('.')[0]))")
+  if [ "$NODE_MAJOR" -ge 18 ]; then
+    HAS_NODE=true
+  else
+    echo "Note: Node.js $(node --version) found but 18+ is recommended. Skills will run in LLM-only mode."
+  fi
+else
+  echo "Note: Node.js not found. Skills will run in LLM-only mode (no scripts needed)."
+fi
+
+# ─── Symlink each skill directory into the skills parent ──────────────────────
+echo "Linking skills to $INSTALL_SKILLS_DIR..."
+linked=()
+for skill_dir in "$REPO_DIR"/*/; do
+  if [ -f "$skill_dir/SKILL.md" ]; then
+    skill_name="$(basename "$skill_dir")"
+    target="$INSTALL_SKILLS_DIR/$skill_name"
+    if [ -L "$target" ] || [ ! -e "$target" ]; then
+      ln -snf "$REPO_DIR/$skill_name" "$target"
+      linked+=("$skill_name")
+    else
+      echo "  skipped $skill_name (already exists at $target, not a symlink)"
+    fi
+  fi
+done
+
+if [ ${#linked[@]} -gt 0 ]; then
+  echo "  linked: ${linked[*]}"
+else
+  echo "  (all skills already linked)"
+fi
+
+# ─── Initialize state files ───────────────────────────────────────────────────
+echo "Initializing state..."
+if [ "$HAS_NODE" = true ]; then
+  node "$REPO_DIR/scripts/bootstrap-system.js"
+else
+  # Create state files directly without Node.js
+  mkdir -p "$REPO_DIR/state" "$REPO_DIR/context" "$REPO_DIR/output" "$REPO_DIR/reports"
+  [ -f "$REPO_DIR/state/linkedin-settings.json" ] || cp "$REPO_DIR/config/default-settings.json" "$REPO_DIR/state/linkedin-settings.json"
+  [ -f "$REPO_DIR/state/linkedin-system-state.json" ] || cp "$REPO_DIR/state/linkedin-system-state.example.json" "$REPO_DIR/state/linkedin-system-state.json"
+fi
+
+# ─── Done ─────────────────────────────────────────────────────────────────────
+echo ""
+echo "linkedin-skills ready."
+echo "  skills dir: $INSTALL_SKILLS_DIR"
+echo ""
+echo "Next steps:"
+echo "  1. Open this folder in Claude Code"
+echo "  2. Run /onboard — it will analyze your landing page and set up your ICP"
+echo "  3. Run /linkedin-lead-filter with your CSV to start filtering leads"
