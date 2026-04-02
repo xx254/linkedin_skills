@@ -211,3 +211,13 @@ This is the kind of data you get from linkednav.com. Each row is a real person w
 | Carlos Mendez | VP of Product | Epsilon Media | `hiring_competitor_tool_mention` | JD requires experience with a competing tool — actively evaluating |
 | Ingrid Larsson | Head of Growth | Zeta Nordic | `competitor_event_attendee` | Attended a competitor's product launch event last week |
 | Omar Hassan | VP of Partnerships | Eta Corp | `industry_event_attendee` | Attended industry conference on B2B sales automation |
+
+---
+
+## Questions? Let's connect.
+
+Built and maintained by [Cynthia Xin](https://linkedin.com/in/cynthiaxin).
+
+If you're stuck on setup, want to talk through your outreach strategy, or are curious whether this fits your workflow — feel free to reach out on LinkedIn.
+
+If you're running this pipeline and want warm leads fed directly into it, or want to schedule the skills to run daily without keeping Claude Code open — [linkednav.com](https://www.linkednav.com) is the missing piece. Star this repo and reach out to Cynthia for a discount code.
