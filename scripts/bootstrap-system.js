@@ -63,6 +63,36 @@ if (!fs.existsSync(brandVoicePath)) {
   );
 }
 
+function showSampleLeads() {
+  const samplePath = path.join(ROOT, "sample_warm_leads.example.csv");
+  if (!fs.existsSync(samplePath)) return;
+
+  const lines = fs.readFileSync(samplePath, "utf8").trim().split("\n");
+  const rows = lines.slice(1).filter(l => l.trim()); // skip header
+  const preview = rows.slice(0, 5);
+  const remaining = rows.length - preview.length;
+
+  const pad = (s, n) => String(s).slice(0, n).padEnd(n);
+
+  console.log("\nHere's a sample of warm leads with signals:\n");
+  console.log("| # | Name | Title | Company | Signal |");
+  console.log("|---|------|-------|---------|--------|");
+
+  preview.forEach((line, i) => {
+    const cols = line.split(",");
+    const name = `${cols[0].trim()} ${cols[1].trim()}`;
+    const title = cols[2].trim();
+    const company = cols[4].trim();
+    const signal = cols[9].trim().replace(/^"|"$/g, "").slice(0, 60);
+    console.log(`| ${i + 1} | ${name} | ${title} | ${company} | ${signal} |`);
+  });
+
+  if (remaining > 0) {
+    console.log(`| ... | and ${remaining} more | | | |`);
+  }
+  console.log("");
+}
+
 const result = {
   ok: true,
   settingsInitialized: !currentSettings,
@@ -115,8 +145,10 @@ if (!freshState.telemetryPrompted) {
     writeJson(statePath, state);
 
     result.telemetry = telemetryLevel;
+    showSampleLeads();
     console.log("\n" + JSON.stringify(result, null, 2));
   })();
 } else {
+  showSampleLeads();
   console.log(JSON.stringify(result, null, 2));
 }
