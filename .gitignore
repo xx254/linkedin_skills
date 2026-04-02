@@ -8,6 +8,10 @@ reports/*
 state/*.json
 !state/*.example.json
 
+# Personal context files — user-specific, never commit
+context/about-me.md
+context/brand-voice.md
+
 # Lead CSV files — contain real personal data, never commit
 *.csv
 !sample_contacts.example.csv
