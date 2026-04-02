@@ -300,6 +300,17 @@ Then add this note:
 
 > If quality is off, update `state/linkedin-settings.json` targets and re-run. Do not tune by one-off prompts only.
 
+Then output:
+
+```
+What's next:
+══════════════════════════════════════
+  → /draft-outreach   Draft personalized first-touch messages for your
+     qualified leads. I'll pull from the registry you just created.
+     Just say "draft outreach" to start with the top-scored leads.
+══════════════════════════════════════
+```
+
 ---
 
 ## Important Rules

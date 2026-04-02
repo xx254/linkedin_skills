@@ -87,7 +87,7 @@ Do not present the best practices as a lecture. Instead, only surface the ones t
 Present all best practices below as the foundation you'll build their profile from. Frame them as things most people get wrong. Show a bad version and a good version for each one. Ask at the end if they want to add any of their own rules.
 
 Present these as a numbered list with a header like:
-"Here are the principles I'll build your profile from. A few of these might be different from what you've seen before:"
+"Here are the principles I'll build your profile from:"
 
 ### The non-negotiables (always apply, no exceptions)
 
@@ -214,6 +214,20 @@ Tell the user the file has been written to `context/brand-voice.md`.
 Then say:
 
 > Every `/draft-outreach` and `/reply-handler` run will now use this profile. Review it before your next campaign. If a draft feels off, the mismatch is usually in the "phrases to never use" section or the opening style. Re-run `/calibrate-voice` any time your style shifts or reply rates drop.
+
+Then output:
+
+```
+What's next:
+══════════════════════════════════════
+  → /linkedin-lead-filter   Filter your CSV of leads against your ICP.
+     Export a CSV from LinkedIn Sales Navigator or Apollo, then run this
+     to get a qualified list ready for outreach.
+
+  → /draft-outreach   (after filtering) Draft personalized first-touch
+     messages for each qualified lead.
+══════════════════════════════════════
+```
 
 ---
 

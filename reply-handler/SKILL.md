@@ -39,11 +39,31 @@ Voice: use whatever voice context exists in the conversation (e.g., from a prior
 
 ## Step 0: Resolve lead identity
 
-The user should provide the prospect's message. For `lead_key`, use the same canonical key as `contracts/lead-artifact-contract.md`:
+**First, check the registry for known leads.**
+
+Read `state/linkedin-system-state.json`. Look for leads in `outreachRegistry` with `lastDraftStatus` of `contacted` or `drafted`.
+
+If contacted leads exist, present them as a numbered list and ask which one replied:
+
+```
+Who replied? Pick a number or paste their message to auto-match:
+
+  1. [Name] @ [Company] — sent [lastDraftAt date]
+  2. [Name] @ [Company] — sent [lastDraftAt date]
+  ...
+
+Or type a name if they're not on this list.
+```
+
+Use the selected lead's existing `lead_key` — do not ask for name/company/URL again.
+
+**Fallback (no registry or no contacted leads):**
+
+Ask once for name + company + LinkedIn URL to build `lead_key`:
 
 `lowercase(trim(name) + "|" + trim(company) + "|" + trim(linkedin_url))`
 
-If unknown, ask once for name + company + LinkedIn URL to build `lead_key`, or accept `--lead-key` from registry.
+Or accept `--lead-key` directly if provided.
 
 ---
 
@@ -173,6 +193,16 @@ Reply type: [classification]
 Strategy: [1 sentence on why this approach]
 Next trigger: [what response from them would prompt the next step]
 URL to include: [yes / not yet — and when to include it]
+```
+
+Then immediately output this options block:
+
+```
+Your options:
+- Send it — say "sent" and I'll log the outcome
+- Another reply — say "reply from [name]" to handle the next one
+- More leads — say "draft outreach" to continue with uncontacted leads
+- Wrap up the campaign — run /campaign-retro to analyze what worked
 ```
 
 ---
