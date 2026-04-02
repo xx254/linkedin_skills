@@ -201,6 +201,9 @@ Goal:         [conversionGoal.type] — [conversionGoal.link or "no link set"]
 Settings saved to: state/linkedin-settings.json
 Competitor profile: state/competitor-profile.json
 
-Next step: Run /linkedin-lead-filter with your CSV to start filtering leads.
+What's next:
+  Step 1 → /calibrate-voice   Build your voice profile so every message sounds like you, not a bot.
+  Step 2 → /linkedin-lead-filter   Filter your CSV leads against your ICP.
+  Step 3 → /draft-outreach   Draft personalized first-touch messages for qualified leads.
 ══════════════════════════════════════
 ```

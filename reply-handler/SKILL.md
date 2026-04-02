@@ -76,6 +76,39 @@ State the classification before drafting.
 
 ---
 
+## Step 2.5: Show reply logic and confirm before drafting
+
+After classifying, show the user exactly how you plan to reply and why — then wait for confirmation or edits before writing the message.
+
+Format:
+
+```
+REPLY LOGIC FOR: [Name] @ [Company]
+─────────────────────────────────────
+Their message:   [1-sentence summary of what they said]
+Reply type:      [classification]
+Rule applied:    [the specific rule that governs this reply type, in plain English]
+Opening angle:   [what the reply will lead with]
+Campaign goal:   [exact goal from outreach.conversionGoal in settings — e.g. "book a discovery call", "get them to try the free plan"]
+Voice applied:   [2-3 key traits pulled from context/brand-voice.md — e.g. "direct opener, no filler words, ends with one low-friction question"]
+URL to include:  [yes — [url from outreach.conversionGoal.link] / not yet — will include after [trigger]]
+
+Rules I'll follow for this reply:
+  1. No em dash — use commas or periods instead
+  2. Every sentence under 30 words
+  3. [No pitch — follow-up, not yet at pitch stage / Pitch allowed — prospect has shown clear interest]
+  4. Peer-to-peer tone — no flattery, no bragging
+  5. Max 1 question
+  6. [Pulls thread from their specific message: [what exactly] / No new signal needed — responding to their question directly]
+  7. [Graceful exit — acknowledge, leave door open, no push / N/A — prospect is still engaged]
+
+Any rules to add, remove, or override before I write this?
+```
+
+Wait for the user to confirm or edit before proceeding to Step 3.
+
+---
+
 ## Step 3: Productized pipeline (script)
 
 Check if Node.js is available:
