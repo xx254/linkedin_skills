@@ -67,28 +67,84 @@ function showSampleLeads() {
   if (!fs.existsSync(samplePath)) return;
 
   const lines = fs.readFileSync(samplePath, "utf8").trim().split("\n");
-  const rows = lines.slice(1).filter(l => l.trim()); // skip header
+  const rows = lines.slice(1).filter(l => l.trim());
   const preview = rows.slice(0, 5);
   const remaining = rows.length - preview.length;
 
-  const pad = (s, n) => String(s).slice(0, n).padEnd(n);
+  // Fixed column widths (total inner width including 1-space padding each side)
+  const COLS = [5, 16, 28, 15, 62];
+  const HEADERS = ["#", "Name", "Title", "Company", "Signal"];
 
-  console.log("\nHere's a sample of warm leads with signals:\n");
-  console.log("| # | Name | Title | Company | Signal |");
-  console.log("|---|------|-------|---------|--------|");
+  // Word-wrap text to fit within content width (col width minus 2 for padding)
+  function wrap(text, colWidth) {
+    const maxW = colWidth - 2;
+    const words = text.split(" ");
+    const result = [];
+    let line = "";
+    for (const word of words) {
+      if (!line) {
+        line = word.slice(0, maxW);
+        let rest = word.slice(maxW);
+        while (rest) { result.push(line); line = rest.slice(0, maxW); rest = rest.slice(maxW); }
+      } else if (line.length + 1 + word.length <= maxW) {
+        line += " " + word;
+      } else {
+        result.push(line);
+        line = word.slice(0, maxW);
+        let rest = word.slice(maxW);
+        while (rest) { result.push(line); line = rest.slice(0, maxW); rest = rest.slice(maxW); }
+      }
+    }
+    if (line) result.push(line);
+    return result.length ? result : [""];
+  }
 
-  preview.forEach((line, i) => {
+  function cell(text, colWidth) {
+    return " " + text.padEnd(colWidth - 1);
+  }
+
+  function center(text, colWidth) {
+    const space = colWidth - 2 - text.length;
+    const l = Math.floor(space / 2);
+    const r = space - l;
+    return " " + " ".repeat(l) + text + " ".repeat(r) + " ";
+  }
+
+  const border = (l, m, r) => l + COLS.map(w => "─".repeat(w)).join(m) + r;
+  const dataRow = cells => "│" + cells.map((t, i) => cell(t, COLS[i])).join("│") + "│";
+
+  const parsed = preview.map((line, i) => {
     const cols = line.split(",");
-    const name = `${cols[0].trim()} ${cols[1].trim()}`;
-    const title = cols[2].trim();
-    const company = cols[4].trim();
-    const signal = cols[9].trim().replace(/^"|"$/g, "").slice(0, 60);
-    console.log(`| ${i + 1} | ${name} | ${title} | ${company} | ${signal} |`);
+    return [
+      String(i + 1),
+      `${cols[0].trim()} ${cols[1].trim()}`,
+      cols[2].trim(),
+      cols[4].trim(),
+      cols[9].trim().replace(/^"|"$/g, ""),
+    ];
   });
 
-  if (remaining > 0) {
-    console.log(`| ... | and ${remaining} more | | | |`);
+  console.log("\nLoading sample warm leads — placeholder contacts with realistic signals so you can run the full pipeline right now. Swap in your real\n  leads any time.\n");
+  console.log(border("┌", "┬", "┐"));
+  console.log("│" + HEADERS.map((h, i) => center(h, COLS[i])).join("│") + "│");
+
+  for (const row of parsed) {
+    console.log(border("├", "┼", "┤"));
+    const wrapped = row.map((val, i) => wrap(val, COLS[i]));
+    const height = Math.max(...wrapped.map(w => w.length));
+    for (let l = 0; l < height; l++) {
+      console.log(dataRow(wrapped.map(w => w[l] || "")));
+    }
   }
+
+  if (remaining > 0) {
+    console.log(border("├", "┼", "┤"));
+    const totalInner = COLS.reduce((a, b) => a + b, 0) + COLS.length - 1;
+    const msg = `  and ${remaining} more`;
+    console.log("│" + msg.padEnd(totalInner) + "│");
+  }
+
+  console.log(border("└", "┴", "┘"));
   console.log("");
 }
 

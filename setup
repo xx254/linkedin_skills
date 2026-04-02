@@ -48,7 +48,13 @@ for skill_dir in "$REPO_DIR"/*/; do
 done
 
 if [ ${#linked[@]} -gt 0 ]; then
-  echo "  linked: ${linked[*]}"
+  echo ""
+  printf "  %-30s %s\n" "Skill" "Status"
+  printf "  %-30s %s\n" "------------------------------" "--------"
+  for skill in "${linked[@]}"; do
+    printf "  %-30s %s\n" "$skill" "linked"
+  done
+  echo ""
 else
   echo "  (all skills already linked)"
 fi
@@ -70,6 +76,8 @@ echo "linkedin-skills ready."
 echo "  skills dir: $INSTALL_SKILLS_DIR"
 echo ""
 echo "Next steps:"
-echo "  1. Open this folder in Claude Code"
-echo "  2. Run /onboard — it will analyze your landing page and set up your ICP"
-echo "  3. Run /linkedin-lead-filter with your CSV to start filtering leads"
+echo "  ─────────────────────────────────────────────────────────────────────"
+printf "  %-28s %s\n" "1. Open in Claude Code" "Open this folder in Claude Code"
+printf "  %-28s %s\n" "2. /onboard" "Analyze your landing page and set up your ICP"
+printf "  %-28s %s\n" "3. /linkedin-lead-filter" "Filter your CSV leads against your ICP"
+echo "  ─────────────────────────────────────────────────────────────────────"
